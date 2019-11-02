@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 import argparse
-import os
+from os import path, listdir, mkdir
+import shutil
 import sys
 import re
 
@@ -28,6 +29,20 @@ def print_if_needed(string):
         print string
 
 
+def get_extension(file):
+    return path.splitext(file)[1]
+
+
+def get_sub_directory_name(extension):
+    sub_directory = extension
+    if not sub_directory:
+        sub_directory = "no_extension"
+    else:
+        # remove dot
+        sub_directory = sub_directory[1:]
+    return sub_directory
+
+
 def main(directory):
     if directory is None:
         exit_message = messages.NONE_DIR
@@ -35,17 +50,37 @@ def main(directory):
                         exit_message + printColor.END)
         return exit_message
 
-    if os.path.exists(directory) == False:
+    if path.exists(directory) == False:
         exit_message = messages.DIR_NOT_FOUND.format(
-            os.path.abspath(directory))
+            path.abspath(directory))
         print_if_needed(printColor.RED + exit_message + printColor.END)
         return exit_message
 
-    if os.path.isdir(directory) == False:
+    if path.isdir(directory) == False:
         exit_message = messages.IS_NOT_DIR.format(
-            os.path.abspath(directory))
+            path.abspath(directory))
         print_if_needed(printColor.RED + exit_message + printColor.END)
         return exit_message
+
+    files = [f for f in listdir(
+        directory) if path.isfile(path.join(directory, f))]
+
+    extensions = list(set(map(get_extension, files)))
+
+    for extension in extensions:
+        sub_directory_name = get_sub_directory_name(extension)
+        sub_directory_path = path.join(directory, sub_directory_name)
+
+        if not path.exists(sub_directory_path):
+            mkdir(sub_directory_path)
+
+        matched_files = filter(lambda x: path.splitext(x)[
+                               1] == extension, files)
+
+        for matched_file in matched_files:
+            source = path.join(directory, matched_file)
+            dest = path.join(sub_directory_path, matched_file)
+            shutil.move(source, dest)
 
     return messages.DONE
 
