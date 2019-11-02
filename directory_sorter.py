@@ -18,6 +18,7 @@ class messages:
     NONE_DIR = "a directory is not defined"
     DIR_NOT_FOUND = "The directory {} was not found"
     IS_NOT_DIR = "{} is not a directory"
+    FILES_MOVED = "{} files moved to {}"
     DONE = "done"
 
 
@@ -81,6 +82,10 @@ def main(directory):
             source = path.join(directory, matched_file)
             dest = path.join(sub_directory_path, matched_file)
             shutil.move(source, dest)
+
+        result_message = messages.FILES_MOVED.format(
+            len(matched_files), path.abspath(sub_directory_path))
+        print_if_needed(printColor.GREEN + result_message + printColor.END)
 
     return messages.DONE
 
