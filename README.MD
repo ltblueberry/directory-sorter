@@ -29,3 +29,9 @@ We have next output and result
 1 files moved to /Users/user/Documents/github/directory-sorter/test/png
 2 files moved to /Users/user/Documents/github/directory-sorter/test/txt
 ```
+
+## License
+
+**[MIT License](LICENSE)**
+
+Copyright (c) 2019 [ltblueberry](https://github.com/ltblueberry)
